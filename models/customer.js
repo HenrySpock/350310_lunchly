@@ -26,6 +26,7 @@ class Customer {
        FROM customers
        ORDER BY last_name, first_name`
     );
+    console.log('ping');
     return results.rows.map(c => new Customer(c));
   }
 
@@ -77,6 +78,10 @@ class Customer {
         [this.firstName, this.lastName, this.phone, this.notes, this.id]
       );
     }
+  }
+
+  fullName() {
+    return `${this.firstName} ${this.lastName}`;
   }
 }
 

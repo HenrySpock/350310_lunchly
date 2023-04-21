@@ -1,0 +1,58 @@
+git init
+
+npm init --yes
+
+createdb lunchlydb
+
+change lunchly to lunchlydb in data.sql
+
+psql -U kodai -d lunchlydb -f data.sql
+
+static async get(id) in customer.js
+is called by
+router.get("/:id/", async function(req, res, next) 
+in routes.js.
+
+fullName function:
+  /** concatenate customer's full name **/
+
+  fullName() {
+    return `${this.firstName} ${this.lastName}`;
+  }
+
+Update templates from pringting firstName and lastName to calling fullName() function:
+customer_detail.html:
+{# {% block title %}{{ customer.firstName }} {{ customer.lastName }}{% endblock %} #}
+{% block title %}{{ customer.fullName() }}{% endblock %} 
+
+{# <h1>{{ customer.firstName }} {{ customer.lastName }}</h1> #}
+<h1>{{ customer.fullName() }}</h1>
+
+customer_edit_form.html:
+{# {% block title %}Edit {{ customer.firstName }} {{ customer.lastName }}{% endblock %} #}
+{% block title %}Edit {{ customer.fullName() }}{% endblock %}
+
+customer_list.html:
+  {# <li><a href="/{{ customer.id }}/">{{ customer.firstName }} {{ customer.lastName }}</a></li> #}
+  <li><a href="/{{ customer.id }}/">{{ customer.fullName() }}</a></li>
+
+      /** save this reservation. */
+
+Write save() function for reservation class:
+  async save() {
+    if (this.id === undefined) {
+      const result = await db.query(
+        `INSERT INTO reservations (customer_id, start_at, num_guests, notes)
+              VALUES ($1, $2, $3, $4)
+              RETURNING id`,
+        [this.customerId, this.startAt, this.numGuests, this.notes]
+      );
+      this.id = result.rows[0].id;
+    } else {
+      await db.query(
+        `UPDATE reservations SET customer_id=$1, start_at=$2, num_guests=$3, notes=$4
+              WHERE id=$5`,
+        [this.customerId, this.startAt, this.numGuests, this.notes, this.id]
+      );
+    }
+  }

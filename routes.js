@@ -92,6 +92,7 @@ router.post("/:id/edit/", async function(req, res, next) {
 /** Handle adding a new reservation. */
 
 router.post("/:id/add-reservation/", async function(req, res, next) {
+  console.log('ping');
   try {
     const customerId = req.params.id;
     const startAt = new Date(req.body.startAt);
@@ -104,6 +105,7 @@ router.post("/:id/add-reservation/", async function(req, res, next) {
       numGuests,
       notes
     });
+    console.log('ping');
     await reservation.save();
 
     return res.redirect(`/${customerId}/`);
@@ -113,3 +115,4 @@ router.post("/:id/add-reservation/", async function(req, res, next) {
 });
 
 module.exports = router;
+
